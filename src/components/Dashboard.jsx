@@ -20,7 +20,8 @@ function Dashboard() {
         const productsQuery = store.fetchAllProducts();
         setQuery(productsQuery);
         const productsData = await productsQuery;
-        setProducts(productsData);
+        setProducts(productsData.queryProduct
+        );
 
         // Fetch sales for the last 30 days
         const endDate = new Date().toISOString();
@@ -86,76 +87,113 @@ function Dashboard() {
       <h1 className="text-xl font-bold mb-4">Product Sales Dashboard</h1>
       
       {/* Revenue Trend */}
-      <div className="bg-white p-4 rounded-lg shadow mb-4">
-        <h2 className="text-lg font-semibold mb-2">Revenue Trend</h2>
-        <LineChart width={800} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="date" 
-            tickFormatter={(date) => format(new Date(date), 'MMM dd')}
-          />
-          <YAxis />
-          <Tooltip 
-            labelFormatter={(date) => format(new Date(date), 'MMM dd, yyyy')}
-            formatter={(value) => [`$${value.toFixed(2)}`, 'Revenue']}
-          />
-          <Legend />
-          <Line 
-            type="monotone" 
-            dataKey="totalRevenue" 
-            stroke="#8884d8" 
-            name="Revenue" 
-          />
-        </LineChart>
+      <div className="bg-[#43867b] p-4 rounded-lg shadow mb-4 flex">
+        <div className="bg-[#497D74] p-4 rounded-lg shadow mb-4 flex-col">
+          <h2 className="text-lg font-semibold mb-2">Revenue Trend</h2>
+          <LineChart width={800} height={300} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3"  />
+            <XAxis  tick={{ fill: 'white' }}
+              dataKey="date" 
+              tickFormatter={(date) => format(new Date(date), 'MMM dd')}
+            />
+            <YAxis tick={{ fill: 'white' }} />
+            <Tooltip 
+              labelFormatter={(date) => format(new Date(date), 'MMM dd, yyyy')}
+              formatter={(value) => [`$${value.toFixed(2)}`, 'Revenue']}
+              contentStyle={{ 
+                backgroundColor: '#EFE9D5',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '10px'
+
+              }}
+              labelStyle={{ 
+                color: '#2C3E50',    // Dark blue-gray for the date label
+                fontWeight: 'bold'
+              }}
+              itemStyle={{ 
+                color: '#34495E'     // Slightly lighter blue-gray for the value
+              }}
+            />
+            <Legend />
+            <Line 
+              type="monotone" 
+              dataKey="totalRevenue" 
+              name="Revenue" 
+              stroke="black"
+            />
+          </LineChart>
+        </div>
+        <div>
+          test
+        </div>
       </div>
+      
 
       {/* Sales Quantity */}
-      <div className="bg-white p-4 rounded-lg shadow mb-4">
-        <h2 className="text-lg font-semibold mb-2">Sales Quantity</h2>
-        <BarChart width={800} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="date" 
-            tickFormatter={(date) => format(new Date(date), 'MMM dd')}
-          />
-          <YAxis />
-          <Tooltip 
-            labelFormatter={(date) => format(new Date(date), 'MMM dd, yyyy')}
-          />
-          <Legend />
-          <Bar 
-            dataKey="totalQuantity" 
-            fill="#82ca9d" 
-            name="Quantity" 
-          />
-        </BarChart>
-      </div>
+      <div className="bg-[#43867b] p-4 rounded-lg shadow mb-4 flex">
+        <div className="bg-[#497D74] p-4 rounded-lg shadow mb-4">
+          <h2 className="text-lg font-semibold mb-2">Sales Quantity</h2>
+          <BarChart width={800} height={300} data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis  tick={{ fill: 'white' }}
+              dataKey="date" 
+              tickFormatter={(date) => format(new Date(date), 'MMM dd')}
+            />
+            <YAxis tick={{ fill: 'white' }}/>
+            <Tooltip 
+              labelFormatter={(date) => format(new Date(date), 'MMM dd, yyyy')}
+              contentStyle={{ 
+                backgroundColor: '#EFE9D5',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '10px'
 
+              }}
+              labelStyle={{ 
+                color: '#2C3E50',    // Dark blue-gray for the date label
+                fontWeight: 'bold'
+              }}
+              itemStyle={{ 
+                color: '#34495E'     // Slightly lighter blue-gray for the value
+              }}
+            />
+            <Legend />
+            <Bar 
+              dataKey="totalQuantity" 
+              fill="#82ca9d" 
+              name="Quantity" 
+            />
+          </BarChart>
+        </div>
+      </div>      
       {/* Top Products Table */}
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h2 className="text-lg font-semibold mb-2">Top Products</h2>
-        <table className="min-w-full">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 text-left">Product</th>
-              <th className="px-4 py-2 text-left">Category</th>
-              <th className="px-4 py-2 text-right">Total Revenue</th>
-              <th className="px-4 py-2 text-right">Total Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {topProducts.map(product => (
-              <tr key={product.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2">{product.name}</td>
-                <td className="px-4 py-2">{product.category}</td>
-                <td className="px-4 py-2 text-right">
-                  ${product.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </td>
-                <td className="px-4 py-2 text-right">{product.totalQuantity.toLocaleString()}</td>
+      <div className="bg-[#43867b] p-4 rounded-lg shadow mb-4 flex">
+        <div className="bg-[#497D74] p-4 rounded-lg shadow">
+          <h2 className="text-lg font-semibold mb-2">Top Products</h2>
+          <table className="min-w-full">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 text-left">Product</th>
+                <th className="px-4 py-2 text-left">Category</th>
+                <th className="px-4 py-2 text-right">Total Revenue</th>
+                <th className="px-4 py-2 text-right">Total Quantity</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {topProducts.map(product => (
+                <tr key={product.id} className="hover:bg-[#71BBB2]">
+                  <td className="px-4 py-2">{product.name}</td>
+                  <td className="px-4 py-2">{product.category}</td>
+                  <td className="px-4 py-2 text-right">
+                    ${product.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </td>
+                  <td className="px-4 py-2 text-right">{product.totalQuantity.toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
