@@ -174,4 +174,4 @@ function generateDataForDateRange(startDateStr, endDateStr, filename) {
 }
 
 // Generate one year of data
-generateDataForDateRange('2025-01-01', '2025-12-31', 'sales_data.txt');
+generateDataForDateRange('2024-01-01', '2024-12-31', 'sales_data.txt');
