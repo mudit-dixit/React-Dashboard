@@ -1,5 +1,6 @@
 import { Instance } from "mobx-state-tree"
-import { SaleModelBase } from "./SaleModel.base"
+import { SaleModelBase, selectFromSale } from "./SaleModel.base"
+import { productModelPrimitives } from "./ProductModel.base"
 
 /* The TypeScript type of an instance of SaleModel */
 export interface SaleModelType extends Instance<typeof SaleModel.Type> {}
@@ -17,3 +18,5 @@ export const SaleModel = SaleModelBase
       console.log(JSON.stringify(self))
     }
   }))
+
+  export const saleModelSelector = selectFromSale().quantity.revenue.date.region.createdOn.updatedOn.product(productModelPrimitives);
