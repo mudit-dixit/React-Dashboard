@@ -137,20 +137,7 @@ function Dashboard() {
   };
 
   // Process category-wise data for pie chart
-  const processCategoryData = () => {
-    return products.reduce((acc, product) => {
-      if (!acc[product.category]) {
-        acc[product.category] = {
-          category: product.category,
-          revenue: 0,
-          quantity: 0
-        };
-      }
-      acc[product.category].revenue += product.totalRevenue;
-      acc[product.category].quantity += product.totalQuantity;
-      return acc;
-    }, {});
-  };
+ 
 
   const buildFilterMenu = () => (
     <Menu as="div" className="relative inline-block text-left">
@@ -226,26 +213,34 @@ function Dashboard() {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
       <PieChart width={400} height={300}>
-        <Pie
-          data={Object.values(data)}
-          dataKey={sortBy}
-          nameKey="category"
-          cx="50%"
-          cy="50%"
-          outerRadius={100}
-          fill="#8884d8"
-          label
-        >
-          {Object.values(data).map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
+      <Pie
+        data={Object.values(data)}
+        dataKey={sortBy} // This will use either 'revenue' or 'quantity' based on your sortBy state
+        nameKey="category"
+        cx="50%"
+        cy="50%"
+        outerRadius={100}
+        fill="#8884d8"
+        label={(entry) => entry.category}
+      >
+        {Object.values(data).map((entry, index) => (
+          <Cell 
+            key={`cell-${index}`} 
+            fill={COLORS[index % COLORS.length]} 
+          />
+        ))}
+      </Pie>
+      <Tooltip 
+        formatter={(value) => sortBy === 'revenue' ? 
+          `$${value.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : 
+          value.toLocaleString()
+        }
+      />
+      <Legend />
+    </PieChart>
     );
   };
-  const categoryData = processCategoryData();
+  
   
   // Sort products based on current sort settings
   const sortedProducts = [...products].sort((a, b) => {
@@ -320,11 +315,7 @@ function Dashboard() {
           />
         ))}
       </LineChart>
-      <ProductSelector 
-        products={products}
-        selectedProducts={selectedProducts}
-        onChange={setSelectedProducts}
-      />
+      
     </div>
   );
 
@@ -384,23 +375,37 @@ function Dashboard() {
     );
   }
   const { chartData, products: uniqueProducts } = processProductWiseChartData();
-
+  const processCategoryData = () => {
+    // Group sales by product category
+    return sales.reduce((acc, sale) => {
+      const category = sale.product.category;
+      
+      if (!acc[category]) {
+        acc[category] = {
+          category: category,
+          revenue: 0,
+          quantity: 0
+        };
+      }
+      
+      acc[category].revenue += sale.revenue;
+      acc[category].quantity += sale.quantity;
+      return acc;
+    }, {});
+  };
+  const categoryData = processCategoryData();
   return (
-    <div className="p-4">
+    <div className="p-4 gap-2">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold">Product Sales Dashboard</h1>
         {buildFilterMenu()}
       </div>
-
-      {/* Charts Grid */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+    <div className='flex gap-2'>
+    <div className="flex flex-col gap-2">
         
 
         {/* Category Distribution */}
-        <div className="bg-[#43867b] p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-2">Category Distribution</h2>
-          <CategoryPieChart data={categoryData} />
-        </div>
+        
 
         <RevenueChart 
           data={chartData}
@@ -413,10 +418,17 @@ function Dashboard() {
           products={uniqueProducts}
           selectedProducts={selectedProducts}
         />
+        
       </div>
-
+      <div className="bg-[#43867b] p-4 rounded-lg shadow flex items-center justify-center">
+          <h2 className="text-lg font-semibold mb-2">Category Distribution</h2>
+          <CategoryPieChart data={categoryData} />
+      </div>
+    </div>
+      {/* Charts Grid */}
+      
       {/* Top Products Table */}
-      <div className="bg-[#43867b] p-4 rounded-lg shadow">
+      <div className="bg-[#43867b] p-4 rounded-lg shadow mt-2">
         <h2 className="text-lg font-semibold mb-2">Top Products</h2>
         <table className="min-w-full">
           {/* ... (existing table configuration) ... */}
