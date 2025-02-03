@@ -9,7 +9,7 @@ function App() {
   return (
    
     <StoreContext.Provider value={rootStore}>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen bg-gray-100 w-full content-center items-center  place-items-center place-content-center flex">
         test
         <Dashboard /> 
       </div>

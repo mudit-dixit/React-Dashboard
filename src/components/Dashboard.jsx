@@ -83,7 +83,7 @@ function Dashboard() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Product Sales Dashboard</h1>
+      <h1 className="text-xl font-bold mb-4">Product Sales Dashboard</h1>
       
       {/* Revenue Trend */}
       <div className="bg-white p-4 rounded-lg shadow mb-4">
